@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	<title>Document</title>
+	<style type="text/css">
+		body{
+			background-image: url('./imags/bg.jpg')
+		}
+		#music{
+			position: absolute;
+			top:10px;
+			right: 10px;
+			border: 1px solid #ccc;
+			padding: 2px;
+			z-index: 9999;
+		}
+
+		#content{
+			margin: 0 auto 0 auto;
+			width: 8.0625rem;
+			perspective: 25rem;
+		}
+
+
+		#box{
+			transform: rotateY(60deg);
+			transform-style: preserve-3d;
+			-webkit-transform: rotateY(60deg);	/* Safari 和 Chrome */
+			-webkit-transform-style: preserve-3d;	/* Safari 和 Chrome */
+			height: 100%;
+			-webkit-perspective-origin: 50% 50%;
+		}
+
+		#box > div{
+			position: absolute;
+			width: 8.0625rem;
+			height: 73.125rem;
+			
+		}
+	</style>
+	<script src="https://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
+</head>
+<body>
+	<audio id="audio" src="./audio/1.mp3">
+		您的浏览器不支持 audio 标签。
+	</audio>
+	<div id ="music">开始</div>
+	<div id="content">
+		<div id="box">
+			<div class="div_1"></div>
+			<div class="div_2"></div>
+			<div class="div_3"></div>
+			<div class="div_4"></div>
+			<div class="div_5"></div>
+			<div class="div_6"></div>
+			<div class="div_7"></div>
+			<div class="div_8"></div>
+			<div class="div_9"></div>
+			<div class="div_10"></div>
+			<div class="div_11"></div>
+			<div class="div_12"></div>
+			<div class="div_13"></div>
+			<div class="div_14"></div>
+			<div class="div_15"></div>
+			<div class="div_16"></div>
+			<div class="div_17"></div>
+			<div class="div_18"></div>
+			<div class="div_19"></div>
+			<div class="div_20"></div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+
+var box = document.getElementById('box');
+var arr = box.getElementsByTagName('div');
+var radius = calc(129, 20);
+var audio = document.getElementById('audio');
+
+
+for (var i = 0; i < arr.length; i++) {
+
+    arr[i].style.background = 'url("./imags/p' + (i + 1) + '.png") no-repeat';
+    arr[i].style.WebkitTransform = "rotateY(" + 360 / arr.length * i + 'deg) translatez(' + radius + 'px)';
+}
+
+function calc(length, totalNum) {
+    return Math.round(length / (2 * Math.tan(Math.PI / totalNum))) - 8;
+}
+
+
+var startX = 0;
+var	 x = 0;
+var	 endX = 0;
+var flag = true;
+$('#box').on('touchstart', function(event) {
+    event.preventDefault();
+    var touch = event.targetTouches[0];
+    startX = touch.pageX - x;
+})
+$('#box').on('touchmove', function(event) {
+    if (flag) {
+        event.preventDefault();
+        var touch = event.targetTouches[0];
+        endX = touch.pageX;
+        x = endX - startX;
+        box.style.transform = 'rotateY(' + x + 'deg)';
+    } else {
+        return false;
+    }
+
+})
+$('#box').on('touchend', function(event) {
+
+});
+$('#music').on('tap', function(e) {
+	if (audio.paused) {
+		audio.play();
+		$('#music').text('停止');
+	} else {
+		audio.pause();
+		$('#music').text('开始');
+	}
+})
+
+window.addEventListener('deviceorientation', function(event) {
+
+    var gamma = event.gamma;
+    if (Math.abs(gamma) > 5) {
+        flag = false;
+        box.style.transform = 'rotateY(' + gamma * 3 + 'deg)';
+    } else {
+        flag = true;
+    }
+
+})
+</script>
+</html>
